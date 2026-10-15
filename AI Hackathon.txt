@@ -1,0 +1,48 @@
+AI Hackathon 
+Overview
+Microsoft and the Premier League invite developers worldwide to join Inside the Game: Developer Hackathon and build AI-powered solutions that transform synthetic, football-realistic data into explainable match intelligence, real-time narratives, and automated match recaps for studio, broadcast, or streaming scenarios.
+
+Key dates
+
+Registration deadline: October 20, 2026, 12:00 PM Pacific Time
+Hacking period: October 6–October 27, 2026, 11:59 PM Pacific Time
+ 
+
+Create and submit an AI solution to climb the leaderboard and compete for a share of $50,000 USD in cash prizes, event tickets, and more.
+
+The strongest submissions will leverage GitHub, GitHub Copilot, Microsoft Foundry, Azure AI Services, Microsoft Fabric and other Azure Database and Analytics services, and the Azure cloud-native services to create AI-powered applications and agents that:
+
+Analyze match events in real time
+Generate stories, highlights, and recaps
+Explain key moments and tactical patterns
+Expand datasets for AI and analytics
+Deliver insights for fans around the world in multiple languages
+Deliver personalized experiences for studios, streaming platforms, and fans
+ 
+
+Get Started:
+
+Register by October 20: Complete your registration by October 20, 2026, at 12:00 PM Pacific Time.
+Watch for your invitation from Microsoft, inviting you to join Innovation Studio Platform, the official hackathon platform.
+Review Premier League Hackathon rules and regulations for all the details you need to participate, including the prize categories, judging criteria and submission process.
+ 
+
+Submit Your Project:
+
+Submit your project by 11:59 PM Pacific Time on October 27, 2026.  
+The top six projects will be selected and notified by November 10, 2026.
+
+
+More Updates:
+Microsoft and the Premier League invite developers worldwide to go beyond the scoreline and reimagine how football can be understood, experienced, and shared.
+Build an AI-powered solution that transforms synthetic, football-realistic data into explainable match intelligence, real-time narratives, automated recaps, and personalized experiences for fans, studios, broadcasters, and streaming platforms.
+Football is more than a final score. Every pass, shot, tackle, change in possession, and shift in pressure can reveal a deeper story about the match.
+Inside the Game: Developer Hackathon challenges you to build an AI-driven application or agent that turns synthetic football events into useful, understandable, and engaging match intelligence.
+Important data requirement
+Projects must use synthetic, football-realistic data. No real Premier League match data is redistributed to participants.
+
+
+Run the App:
+cd /d "C:\Users\SiyabongaNcube\Desktop\AI Hackathon"
+set PYTHONUTF8=1
+python -m uvicorn app.main:app --reload --port 8000

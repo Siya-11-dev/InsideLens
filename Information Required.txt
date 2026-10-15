@@ -1,0 +1,31 @@
+Information Required
+Title
+Give your project a title
+InsideLens — Explainable Real-Time Match Intelligence
+
+
+
+Add a tagline for your project:
+Turn synthetic football data into explainable match intelligence — real-time tactical insights, auto-highlights and multilingual recaps, every claim backed by evidence, weighted factors and a counterfactual.
+
+Keywords:
+match intelligence; explainable AI; football analytics; real-time; tactical patterns; highlights; multilingual; personalization; xG; counterfactual; Azure OpenAI; Microsoft Fabric
+Description
+Give a detailed description of your project and its goals
+InsideLens is an AI-powered, cloud-native solution that turns synthetic, football-realistic event data into explainable match intelligence for studio, broadcast and streaming scenarios.
+
+The problem: modern match tools tell you WHAT happened (score, xG, possession) but never WHY. Black-box models offer no accountability, and one-size-fits-all feeds ignore the very different needs of analysts, commentators and fans.
+
+Our solution: InsideLens ingests a live event stream and produces, in real time, insights that always show their work. Every insight ships with three explainability pillars: (1) weighted factors that sum to 1, (2) an evidence graph that cites the exact event IDs and metric deltas, and (3) a counterfactual — the single change that would most have altered the outcome. On top of this, the platform detects tactical patterns (high press, low block, transitions, overloads, sustained pressure, set plays), builds an explainable highlight reel ranked by an excitement score, and writes full-time recaps.
+
+Goals and capabilities, mapped to the brief:
+- Analyze match events in real time via an async streaming pipeline over WebSocket.
+- Generate stories, highlights and recaps automatically.
+- Explain key moments and tactical patterns with causal, evidence-backed reasoning.
+- Expand datasets for AI and analytics: a 28-column, ML-ready feature export (zone, flank, distance-to-goal, shot angle, pressure score) in JSONL/CSV/Parquet/Delta.
+- Deliver insights in multiple languages (EN/ES/FR/PT/AR/ZU) for fans worldwide.
+- Deliver personalized experiences with seven personas for studios, broadcasters and fans (tone, depth, stat-bias, favourite team).
+
+Built on the Microsoft stack and Azure-ready by design: GitHub and GitHub Copilot for development, Azure OpenAI on Microsoft Foundry for narratives, Azure AI Translator for localization, Azure Event Hubs for live ingestion, Azure SQL Database for insight persistence, and Microsoft Fabric / OneLake for the analytics lakehouse. Every Azure integration is optional and lazy — the system runs fully offline on a deterministic synthetic feed and auto-degrades, so a live demo never breaks.
+
+The result is production-ready explainability: transparent, auditable match intelligence that lets studios, streamers and fans understand not just the score, but the story behind it.

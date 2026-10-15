@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 200" width="900" height="200" role="img" aria-label="InsideLens — Explainable Real-Time Match Intelligence">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1220"/>
+      <stop offset="1" stop-color="#111a2e"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset="1" stop-color="#4ade80"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="200" rx="18" fill="url(#bg)"/>
+  <rect x="0.5" y="0.5" width="899" height="199" rx="17.5" fill="none" stroke="#1f2b47"/>
+  <g transform="translate(70 100)">
+    <circle r="46" fill="none" stroke="url(#accent)" stroke-width="9"/>
+    <circle r="19" fill="url(#accent)"/>
+  </g>
+  <text x="160" y="92" font-family="Segoe UI, Arial, sans-serif" font-size="52" font-weight="700" fill="#e7eefc">InsideLens</text>
+  <text x="161" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="21" fill="#8ea2c7">Explainable Real-Time Match Intelligence</text>
+  <text x="161" y="162" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#5f7396">Real-time · Evidence-backed · Multilingual · Azure-ready</text>
+</svg>

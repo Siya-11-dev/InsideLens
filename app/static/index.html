@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InsideLens</title>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">◎</div>
+      <div>
+        <div class="brand-name">InsideLens</div>
+        <div class="brand-sub">Explainable Tactical Intelligence</div>
+      </div>
+    </div>
+    <div class="matchline">
+      <span class="team home-name">Home</span>
+      <span id="score" class="score">0 – 0</span>
+      <span class="team away-name">Away</span>
+    </div>
+    <div class="controls">
+      <span id="clock" class="clock">0'</span>
+      <select id="homeTeam" title="Home team"></select>
+      <span class="vs">vs</span>
+      <select id="awayTeam" title="Away team"></select>
+      <select id="speed" title="Replay speed">
+        <option value="240">Instant</option>
+        <option value="90">Fast</option>
+        <option value="60" selected>Normal</option>
+        <option value="25">Slow</option>
+      </select>
+      <select id="lang" title="Narrative language">
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+        <option value="pt">Português</option>
+        <option value="ar">العربية</option>
+        <option value="zu">isiZulu</option>
+      </select>
+      <select id="persona" title="Personalization"></select>
+      <select id="teamFilter" title="Insight filter">
+        <option value="all">All insights</option>
+        <option value="HOME">Home only</option>
+        <option value="AWAY">Away only</option>
+      </select>
+      <button id="playBtn" class="primary">▶ Play live</button>
+    </div>
+  </header>
+
+  <div id="status" class="statusbar">Ready. Press “Play live” to start the synthetic match feed.</div>
+
+  <main class="grid">
+    <section class="panel pitch-panel">
+      <div class="panel-head"><h2>Live pitch</h2><span id="possessionTag" class="tag">possession</span></div>
+      <div class="pitch-wrap">
+        <svg id="pitch" viewBox="0 0 120 84" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <marker id="arrowHome" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4.5" markerHeight="4.5" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="var(--home)" />
+            </marker>
+            <marker id="arrowAway" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4.5" markerHeight="4.5" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="var(--away)" />
+            </marker>
+          </defs>
+          <rect x="0" y="0" width="120" height="84" rx="2" class="turf" />
+          <g class="stripes">
+            <rect x="4" y="4" width="18.67" height="76" />
+            <rect x="22.67" y="4" width="18.67" height="76" />
+            <rect x="41.33" y="4" width="18.67" height="76" />
+            <rect x="60" y="4" width="18.67" height="76" />
+            <rect x="78.67" y="4" width="18.67" height="76" />
+            <rect x="97.33" y="4" width="18.67" height="76" />
+          </g>
+          <g class="markings">
+            <rect x="4" y="4" width="112" height="76" fill="none" />
+            <line x1="60" y1="4" x2="60" y2="80" />
+            <circle cx="60" cy="42" r="10" fill="none" />
+            <circle cx="60" cy="42" r="0.7" class="spot" />
+            <circle cx="15" cy="42" r="0.7" class="spot" />
+            <circle cx="105" cy="42" r="0.7" class="spot" />
+            <rect x="4" y="22" width="18" height="40" fill="none" />
+            <rect x="98" y="22" width="18" height="40" fill="none" />
+            <rect x="4" y="32" width="6" height="20" fill="none" />
+            <rect x="110" y="32" width="6" height="20" fill="none" />
+            <path d="M21 35.5 Q13 42 21 48.5" fill="none" />
+            <path d="M99 35.5 Q107 42 99 48.5" fill="none" />
+            <rect class="goalnet" x="1.6" y="36" width="2.4" height="12" fill="none" />
+            <rect class="goalnet" x="116" y="36" width="2.4" height="12" fill="none" />
+          </g>
+          <text x="32" y="42.8" class="half-label" id="halfHome">HOME</text>
+          <text x="88" y="42.8" class="half-label" id="halfAway">AWAY</text>
+          <g id="pitchEvents"></g>
+          <g id="arrows"></g>
+          <g id="trail"></g>
+          <g id="players"></g>
+          <circle id="ball" cx="60" cy="42" r="2.2" class="ball" />
+        </svg>
+        <div id="goalFlash" class="goal-flash"></div>
+        <div id="goalPop" class="goal-pop"></div>
+      </div>
+      <div class="statbox">
+        <div class="stat-row"><span class="hval" id="haPoss">0%</span><span class="stat-label">Possession</span><span class="aval" id="awPoss">0%</span></div>
+        <div class="posbar"><div id="posHome" class="posbar-home"></div></div>
+        <div class="statgrid">
+          <div><span id="haShots">0</span><em>Shots</em><span id="awShots">0</span></div>
+          <div><span id="haXg">0.0</span><em>xG</em><span id="awXg">0.0</span></div>
+          <div><span id="haPass">0%</span><em>Pass acc.</em><span id="awPass">0%</span></div>
+          <div><span id="haTilt">0%</span><em>Field tilt</em><span id="awTilt">0%</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel momentum-panel">
+      <div class="panel-head"><h2>Match momentum</h2><span class="tag">explained below</span></div>
+      <svg id="momentum" viewBox="0 0 600 180" preserveAspectRatio="none">
+        <line x1="0" y1="90" x2="600" y2="90" class="axis" />
+        <path id="momHome" class="mom-home" d="" />
+        <path id="momAway" class="mom-away" d="" />
+      </svg>
+      <div class="legend">
+        <span><i class="dot home"></i><span id="homeNameLegend">Home</span></span>
+        <span><i class="dot away"></i><span id="awayNameLegend">Away</span></span>
+      </div>
+      <div class="panel-head"><h2>Active patterns</h2></div>
+      <div id="patterns" class="pattern-list"><span class="muted">None detected yet.</span></div>
+    </section>
+
+    <section class="panel commentary-panel">
+      <div class="panel-head"><h2>Live feed</h2><span class="tag">synthetic</span></div>
+      <div id="commentary" class="commentary"></div>
+    </section>
+
+    <section class="panel insights-panel">
+      <div class="panel-head">
+        <h2>Explainable insights</h2>
+        <span class="tag" id="insightCount">0</span>
+      </div>
+      <div id="insights" class="insights">
+        <div class="empty">Insights will appear here — each with evidence, weighted factors, a confidence score and a counterfactual.</div>
+      </div>
+    </section>
+
+    <section class="panel highlights-panel">
+      <div class="panel-head">
+        <h2>Automated highlights</h2>
+        <span class="tag" id="hlCount">0</span>
+      </div>
+      <div id="highlights" class="highlights">
+        <span class="muted">Ranked key moments appear at full-time.</span>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
