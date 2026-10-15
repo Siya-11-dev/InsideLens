@@ -5,9 +5,10 @@ Built for *Inside the Game: Developer Hackathon* (Microsoft × Premier League).
 
 ![InsideLens banner](docs/banner.svg)
 
+![CI](https://github.com/Siya-11-dev/InsideLens/actions/workflows/ci.yml/badge.svg)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-async-009688)
-![Tests](https://img.shields.io/badge/tests-73%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-74%20passing-brightgreen)
 ![Azure-ready](https://img.shields.io/badge/Azure-ready-0078D4)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
@@ -101,7 +102,13 @@ The system runs **with zero cloud keys** and swaps to Azure services without cod
 Set `INSIDELENS_LLM_PROVIDER=azure`, `INSIDELENS_TRANSLATOR_PROVIDER=azure`,
 `INSIDELENS_DATA_SOURCE=eventhub` and the corresponding env vars to activate. Any
 Azure call failure automatically falls back to the deterministic local engine, so the
-demo never breaks on stage. See [`docs/AZURE_MAPPING.md`](docs/AZURE_MAPPING.md).
+demo never breaks on stage. See [`docs/AZURE_MAPPING.md`](docs/AZURE_MAPPING.md) for the
+architecture mapping and [`docs/AZURE_EXERCISE.md`](docs/AZURE_EXERCISE.md) for a step-by-step
+runbook. To exercise the integrations directly:
+
+```powershell
+python scripts/azure_smoke.py    # reports PASS / FALLBACK / SKIP per provider
+```
 
 ---
 
@@ -124,6 +131,23 @@ selector and expand the insight cards to see per-card language chips.
 pip install pytest
 python -m pytest -q
 ```
+
+---
+
+## Developer workflow & GitHub Copilot
+
+This repository is set up for AI-assisted development:
+
+- **[`.github/copilot-instructions.md`](.github/copilot-instructions.md)** teaches GitHub
+  Copilot the architecture, style rules and guardrails (offline-first, explainability,
+  lazy Azure imports, Pydantic v2, no frontend build step) so suggestions match the codebase.
+- **[`AGENTS.md`](AGENTS.md)** gives coding agents a quick map of "what lives where" and a
+  definition of done.
+- **[`.github/workflows/ci.yml`](.github/workflows/ci.yml)** runs the full `pytest` suite on
+  every push and pull request (Python 3.11 and 3.12), proving the app builds and passes with
+  **no Azure credentials**.
+- **[`.github/workflows/azure-smoke.yml`](.github/workflows/azure-smoke.yml)** runs the Azure
+  exercise on demand (`workflow_dispatch`) against repository secrets.
 
 ---
 
@@ -207,9 +231,14 @@ app/
   data/sources.py      EventSource: synthetic / Event Hubs / replay
   main.py              FastAPI app + WebSocket
   static/              dashboard (HTML/CSS/JS)
-docs/                  Azure & Microsoft Fabric mapping
+scripts/
+  azure_smoke.py       Azure exercise (live PASS/FALLBACK/SKIP per provider)
+.github/
+  copilot-instructions.md   GitHub Copilot repo guidance
+  workflows/           CI (pytest) + on-demand Azure smoke
+docs/                  Azure & Microsoft Fabric mapping, runbook, banner, screenshots
 tests/                 sources, simulator, analytics, explainability, highlights,
-                       personas, translator, dataset, store, pipeline, API
+                       personas, translator, dataset, store, pipeline, API, Azure (skipped offline)
 ```
 
 ## Reproducibility

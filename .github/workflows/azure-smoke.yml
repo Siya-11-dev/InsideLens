@@ -1,0 +1,42 @@
+name: azure-smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      storage_backend:
+        description: "Insight store backend to exercise"
+        type: choice
+        options: [memory, azuresql, fabric]
+        default: memory
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: System deps for pyodbc
+        run: sudo apt-get update && sudo apt-get install -y unixodbc-dev
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-azure.txt
+      - name: Run Azure exercise
+        env:
+          INSIDELENS_LLM_PROVIDER: azure
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          AZURE_OPENAI_DEPLOYMENT: ${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
+          INSIDELENS_TRANSLATOR_PROVIDER: azure
+          AZURE_TRANSLATOR_ENDPOINT: ${{ secrets.AZURE_TRANSLATOR_ENDPOINT }}
+          AZURE_TRANSLATOR_KEY: ${{ secrets.AZURE_TRANSLATOR_KEY }}
+          AZURE_TRANSLATOR_REGION: ${{ secrets.AZURE_TRANSLATOR_REGION }}
+          INSIDELENS_STORE_BACKEND: ${{ github.event.inputs.storage_backend }}
+          AZURE_SQL_CONNECTION_STRING: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+          INSIDELENS_DATA_SOURCE: eventhub
+          AZURE_EVENTHUB_CONNECTION_STRING: ${{ secrets.AZURE_EVENTHUB_CONNECTION_STRING }}
+          AZURE_EVENTHUB_NAME: ${{ secrets.AZURE_EVENTHUB_NAME }}
+        run: python scripts/azure_smoke.py
