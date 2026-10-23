@@ -514,6 +514,9 @@ function resetGame() {
   els.insights.innerHTML = '<div class="empty">Insights will appear here — each with evidence, weighted factors, a confidence score and a counterfactual.</div>';
   els.commentary.innerHTML = "";
   els.pitchEvents.innerHTML = "";
+  els.patterns.innerHTML = '<span class="muted">None detected yet.</span>';
+  if (els.momHome) els.momHome.setAttribute("d", "");
+  if (els.momAway) els.momAway.setAttribute("d", "");
   els.highlights.innerHTML = '<span class="muted">Ranked key moments appear at full-time.</span>';
   clearPlayers();
   clearTrail();
@@ -524,9 +527,18 @@ function resetGame() {
   // return to defaults
   state.home = "MUN";
   state.away = "MCI";
-  state.homeColor = "#DA020E";
-  state.awayColor = "#6CABDD";
+  state.homeColor = "#3b82f6";
+  state.awayColor = "#ef4444";
   state.persona = "broadcast-hype";
+
+  document.documentElement.style.setProperty("--home", "#3b82f6");
+  document.documentElement.style.setProperty("--away", "#ef4444");
+  els.homeName.textContent = "Home";
+  els.awayName.textContent = "Away";
+  els.homeNameLegend.textContent = "Home";
+  els.awayNameLegend.textContent = "Away";
+  if (els.halfHome) els.halfHome.textContent = "HOME";
+  if (els.halfAway) els.halfAway.textContent = "AWAY";
   state.lang = "en";
   state.teamFilter = "all";
   try { els.homeTeam.value = state.home; } catch (e) {}
