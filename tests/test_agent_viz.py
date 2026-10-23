@@ -10,8 +10,8 @@ def test_agent_endpoint():
     assert r.status_code == 200
     body = r.json()
     assert body["answer"]
-    assert "tools" in body
-    assert body["context"]["score"]
+    assert "agents" in body
+    assert body["tactical"]["score"]
 
 
 def test_heatmap_endpoint():

@@ -138,6 +138,22 @@ async def personalize(
     )
 
 
+@app.get("/api/agents")
+async def agents() -> JSONResponse:
+    from app.agents import CoordinatorAgent
+
+    coord = CoordinatorAgent()
+    return JSONResponse(
+        {
+            "coordinator": coord.name,
+            "agents": [
+                {"name": a.name, "role": a.role}
+                for a in (coord.tactical, coord.narrative, coord.localization, coord.data)
+            ],
+        }
+    )
+
+
 @app.get("/api/agent")
 async def agent(
     seed: int | None = Query(default=None),

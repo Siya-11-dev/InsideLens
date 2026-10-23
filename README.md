@@ -173,7 +173,8 @@ feed and evidence-backed insight cards.
 | GET | `/api/personas` | Available personas |
 | GET | `/api/dataset/export?seed=…&format=jsonl\|csv\|parquet\|delta&upload=false` | Expanded analytics dataset for ML/BI; `upload=true` pushes to Fabric OneLake |
 | GET | `/api/store/stats` | Active storage backend + persisted insight count |
-| GET | `/api/agent?question=...` | Conversational match analyst (tool-grounded, multilingual) |
+| GET | `/api/agent?question=...` | Multi-agent match analyst (coordinator + tactical/narrative/localization/data) |
+| GET | `/api/agents` | List available agents and roles |
 | GET | `/api/heatmap` | Spatial event heatmap (team/kind filterable) |
 | GET | `/api/pass-network` | Pass network nodes/edges |
 | GET | `/api/xt` | Expected threat (xT) by team + top events |
