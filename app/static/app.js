@@ -511,6 +511,19 @@ function resetGame() {
   els.hlCount.textContent = "0";
   els.score.textContent = "0 – 0";
   els.clock.textContent = "0'";
+  els.haPoss.textContent = "0%";
+  els.awPoss.textContent = "0%";
+  els.posHome.style.width = "50%";
+  els.haShots.textContent = "0";
+  els.awShots.textContent = "0";
+  els.haXg.textContent = "0.0";
+  els.awXg.textContent = "0.0";
+  els.haPass.textContent = "0%";
+  els.awPass.textContent = "0%";
+  els.haTilt.textContent = "0%";
+  els.awTilt.textContent = "0%";
+  els.possessionTag.textContent = "possession";
+  if (els.ball) { els.ball.setAttribute("cx", mapX(50)); els.ball.setAttribute("cy", mapY(50)); }
   els.insights.innerHTML = '<div class="empty">Insights will appear here — each with evidence, weighted factors, a confidence score and a counterfactual.</div>';
   els.commentary.innerHTML = "";
   els.pitchEvents.innerHTML = "";
