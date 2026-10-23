@@ -520,6 +520,22 @@ function resetGame() {
   clearArrows();
   els.playBtn.textContent = "▶ Play live";
   els.playBtn.classList.remove("playing");
+
+  // return to defaults
+  state.home = "MUN";
+  state.away = "MCI";
+  state.homeColor = "#DA020E";
+  state.awayColor = "#6CABDD";
+  state.persona = "broadcast-hype";
+  state.lang = "en";
+  state.teamFilter = "all";
+  try { els.homeTeam.value = state.home; } catch (e) {}
+  try { els.awayTeam.value = state.away; } catch (e) {}
+  try { els.persona.value = state.persona; } catch (e) {}
+  try { els.lang.value = state.lang; } catch (e) {}
+  try { els.teamFilter.value = state.teamFilter; } catch (e) {}
+  try { els.speed.value = "60"; } catch (e) {}
+  clearPlayers();
   setStatus("Match cleared. Press “Play live” to start a new synthetic match feed.");
 }
 
