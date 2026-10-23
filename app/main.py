@@ -1,5 +1,10 @@
 from __future__ import annotations
 
+import os
+import threading
+import time
+import webbrowser
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, Query, WebSocket, WebSocketDisconnect
@@ -30,10 +35,22 @@ def _pipeline(
         return MatchPipeline(source=get_source(get_settings(), seed, home_club=home, away_club=away))
     return MatchPipeline(seed=seed, home_team=home, away_team=away)
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    if not os.environ.get("PYTEST_CURRENT_TEST") and os.environ.get("INSIDELENS_OPEN_BROWSER", "1") == "1":
+        def _open() -> None:
+            time.sleep(1.5)
+            webbrowser.open(f"http://127.0.0.1:{get_settings().port}")
+
+        threading.Thread(target=_open, daemon=True).start()
+    yield
+
+
 app = FastAPI(
     title="InsideLens",
     description="Explainable real-time tactical intelligence for football.",
     version=__version__,
+    lifespan=lifespan,
 )
 app.add_middleware(
     CORSMiddleware,
