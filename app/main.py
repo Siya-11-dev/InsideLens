@@ -13,6 +13,7 @@ from app.data.sources import get_source
 from app.data.teams import list_clubs
 from app.engine.narrative import LANGUAGES
 from app.engine.personas import get_persona, list_personas
+from app.engine.agent import answer as agent_answer
 from app.engine.pipeline import MatchPipeline
 from app.store.factory import get_repository
 
@@ -137,6 +138,19 @@ async def personalize(
     )
 
 
+@app.get("/api/agent")
+async def agent(
+    seed: int | None = Query(default=None),
+    question: str = Query(default="Why did the home team win?"),
+    persona: str | None = Query(default=None),
+    home: str | None = Query(default=None),
+    away: str | None = Query(default=None),
+) -> JSONResponse:
+    pipeline = _pipeline(seed, home=home, away=away)
+    result = await agent_answer(pipeline, question, persona_id=persona)
+    return JSONResponse(result)
+
+
 @app.get("/api/dataset/export")
 async def dataset_export(
     seed: int | None = Query(default=None),
@@ -147,6 +161,39 @@ async def dataset_export(
 ) -> JSONResponse:
     pipeline = _pipeline(seed, home=home, away=away)
     return JSONResponse(pipeline.export(fmt=format, upload=upload))
+
+
+@app.get("/api/heatmap")
+async def heatmap(
+    seed: int | None = Query(default=None),
+    team: str | None = Query(default=None),
+    kind: str | None = Query(default=None),
+    home: str | None = Query(default=None),
+    away: str | None = Query(default=None),
+) -> JSONResponse:
+    pipeline = _pipeline(seed, home=home, away=away)
+    return JSONResponse(pipeline.heatmap(team_id=team, kind=kind))
+
+
+@app.get("/api/pass-network")
+async def pass_network(
+    seed: int | None = Query(default=None),
+    team: str | None = Query(default=None),
+    home: str | None = Query(default=None),
+    away: str | None = Query(default=None),
+) -> JSONResponse:
+    pipeline = _pipeline(seed, home=home, away=away)
+    return JSONResponse(pipeline.pass_network(team_id=team))
+
+
+@app.get("/api/xt")
+async def expected_threat(
+    seed: int | None = Query(default=None),
+    home: str | None = Query(default=None),
+    away: str | None = Query(default=None),
+) -> JSONResponse:
+    pipeline = _pipeline(seed, home=home, away=away)
+    return JSONResponse(pipeline.expected_threat())
 
 
 @app.get("/api/store/stats")

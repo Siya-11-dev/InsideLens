@@ -3,7 +3,15 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass
 
-from app.data.teams import DEFAULT_AWAY, DEFAULT_HOME, away_team, get_club, home_team, venue_for
+from app.data.teams import (
+    DEFAULT_AWAY,
+    DEFAULT_HOME,
+    club_strength,
+    away_team,
+    get_club,
+    home_team,
+    venue_for,
+)
 from app.engine.metrics import (
     attack_dir,
     clamp,
@@ -52,7 +60,12 @@ class MatchSimulator:
         self.home = home_team(self.home_club.id)
         self.away = away_team(self.away_club.id)
         self.teams: dict[str, Team] = {"HOME": self.home, "AWAY": self.away}
-        self.strength = {"HOME": 0.56, "AWAY": 0.44}
+        home_rating = club_strength(self.home_club.id) + 0.06
+        away_rating = club_strength(self.away_club.id)
+        self.strength = {
+            "HOME": min(0.78, home_rating),
+            "AWAY": min(0.78, away_rating),
+        }
         self.event_id = 0
         self.ball_x = 50.0
         self.ball_y = 50.0

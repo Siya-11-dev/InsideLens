@@ -525,3 +525,19 @@ def home_team(club_id: str | None = None) -> Team:
 
 def away_team(club_id: str | None = None) -> Team:
     return build_team_from_club(club_id or DEFAULT_AWAY, "AWAY", -1)
+
+
+# Relative overall strength of each club (higher = more control in possession). Based on
+# the 2026/27 Premier League pecking order so stronger clubs skew possession and scoring.
+CLUB_STRENGTH: dict[str, float] = {
+    "MCI": 0.70, "ARS": 0.68, "LIV": 0.66, "CHE": 0.64,
+    "MUN": 0.62, "TOT": 0.60, "NEW": 0.60, "BHA": 0.58,
+    "AVL": 0.58, "EVE": 0.54, "FUL": 0.54, "BRE": 0.53,
+    "CRY": 0.52, "NFO": 0.52, "BOU": 0.50, "COV": 0.48,
+    "HUL": 0.47, "IPS": 0.46, "LEE": 0.46, "SUN": 0.45,
+}
+
+
+def club_strength(club_id: str | None) -> float:
+    key = (club_id or DEFAULT_HOME).upper()
+    return CLUB_STRENGTH.get(key, CLUB_STRENGTH[DEFAULT_HOME])

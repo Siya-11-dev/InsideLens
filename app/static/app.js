@@ -3,6 +3,7 @@ const els = {
   clock: document.getElementById("clock"),
   status: document.getElementById("status"),
   playBtn: document.getElementById("playBtn"),
+  refreshBtn: document.getElementById("refreshBtn"),
   speed: document.getElementById("speed"),
   homeTeam: document.getElementById("homeTeam"),
   awayTeam: document.getElementById("awayTeam"),
@@ -57,6 +58,8 @@ const state = {
   awayColor: "#6CABDD",
   insightCount: 0,
   lastEventCount: 0,
+  insights: [],
+  highlights: [],
   matchDone: false,
   lastGoalId: null,
   trail: [],
@@ -355,14 +358,32 @@ function drawPatterns(patterns) {
   });
 }
 
+function visibleInsights() {
+  return state.teamFilter === "all"
+    ? state.insights
+    : state.insights.filter((i) => i.team_id === state.teamFilter);
+}
+
+function renderInsightsList() {
+  els.insights.innerHTML = "";
+  const visible = visibleInsights();
+  if (!visible.length) {
+    els.insights.innerHTML = '<div class="empty">No insights for this filter yet.</div>';
+  } else {
+    visible.slice().reverse().forEach((insight) => els.insights.appendChild(buildCard(insight)));
+  }
+  els.insightCount.textContent = visible.length;
+}
+
 function onInsight(insight) {
-  if (state.teamFilter !== "all" && insight.team_id !== state.teamFilter) return;
-  if (els.insights.querySelector(".empty")) els.insights.innerHTML = "";
-  const card = buildCard(insight);
-  els.insights.prepend(card);
-  state.insightCount += 1;
-  els.insightCount.textContent = state.insightCount;
-  while (els.insights.childElementCount > 40) els.insights.removeChild(els.insights.lastChild);
+  state.insights.push(insight);
+  state.insightCount = visibleInsights().length;
+  if (state.teamFilter === "all" || insight.team_id === state.teamFilter) {
+    if (els.insights.querySelector(".empty")) els.insights.innerHTML = "";
+    els.insights.prepend(buildCard(insight));
+    els.insightCount.textContent = visibleInsights().length;
+    while (els.insights.childElementCount > 40) els.insights.removeChild(els.insights.lastChild);
+  }
 }
 
 function confClass(c) { return c >= 0.75 ? "high" : c >= 0.55 ? "mid" : "low"; }
@@ -426,6 +447,13 @@ function renderCardText(card) {
 
 function escapeAttr(s) { return String(s).replace(/"/g, "&quot;"); }
 
+function renderHighlightsFiltered() {
+  const list = state.teamFilter === "all"
+    ? state.highlights
+    : state.highlights.filter((h) => h.team_id === state.teamFilter);
+  renderHighlights(list);
+}
+
 function onEnd(frame) {
   state.playing = false;
   state.matchDone = true;
@@ -433,7 +461,10 @@ function onEnd(frame) {
   els.playBtn.classList.remove("playing");
   const score = frame.summary ? frame.summary.score : "";
   setStatus(`Full-time ${score}. ${state.insightCount} explainable insights generated.`);
-  if (frame.summary && frame.summary.highlights) renderHighlights(frame.summary.highlights);
+  if (frame.summary && frame.summary.highlights) {
+    state.highlights = frame.summary.highlights;
+    renderHighlightsFiltered();
+  }
   loadRecap();
 }
 
@@ -468,6 +499,32 @@ function renderHighlights(list) {
   });
 }
 
+function resetGame() {
+  if (state.ws) { try { state.ws.close(); } catch (e) {} state.ws = null; }
+  state.playing = false;
+  state.matchDone = false;
+  state.insights = [];
+  state.highlights = [];
+  state.insightCount = 0;
+  state.lastGoalId = null;
+  els.insightCount.textContent = "0";
+  els.hlCount.textContent = "0";
+  els.score.textContent = "0 – 0";
+  els.clock.textContent = "0'";
+  els.insights.innerHTML = '<div class="empty">Insights will appear here — each with evidence, weighted factors, a confidence score and a counterfactual.</div>';
+  els.commentary.innerHTML = "";
+  els.pitchEvents.innerHTML = "";
+  els.highlights.innerHTML = '<span class="muted">Ranked key moments appear at full-time.</span>';
+  clearPlayers();
+  clearTrail();
+  clearArrows();
+  els.playBtn.textContent = "▶ Play live";
+  els.playBtn.classList.remove("playing");
+  setStatus("Match cleared. Press “Play live” to start a new synthetic match feed.");
+}
+
+els.refreshBtn.addEventListener("click", resetGame);
+
 els.playBtn.addEventListener("click", () => {
   if (state.playing) {
     if (state.ws) state.ws.close();
@@ -477,6 +534,8 @@ els.playBtn.addEventListener("click", () => {
     return;
   }
   state.insightCount = 0;
+  state.insights = [];
+  state.highlights = [];
   state.matchDone = false;
   els.insightCount.textContent = "0";
   els.insights.innerHTML = '<div class="empty">Waiting for key moments…</div>';
@@ -503,7 +562,11 @@ els.lang.addEventListener("change", () => {
   document.querySelectorAll(".card").forEach((c) => { c.dataset.lang = state.lang; renderCardText(c); });
 });
 
-els.teamFilter.addEventListener("change", () => { state.teamFilter = els.teamFilter.value; });
+els.teamFilter.addEventListener("change", () => {
+  state.teamFilter = els.teamFilter.value;
+  renderInsightsList();
+  if (state.matchDone) renderHighlightsFiltered();
+});
 
 els.persona.addEventListener("change", () => {
   state.persona = els.persona.value;

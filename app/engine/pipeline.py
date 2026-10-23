@@ -118,6 +118,10 @@ class MatchPipeline:
             if persona:
                 insight.narrative = insight.translations.get(persona.language) or insight.narrative
             self.insights.append(insight)
+            try:
+                self.repository.save_many(self.meta.match_id, [insight])
+            except Exception:
+                pass
             yield {"type": "insight", "insight": insight.model_dump()}
 
     async def stream(
@@ -166,7 +170,6 @@ class MatchPipeline:
                 yield frame
 
         home, away = self.analytics.snapshot()
-        self.repository.save_many(self.meta.match_id, self.insights)
         events = self._analysis_events
         end_state = self._state(events[-1]) if events else None
         highlights = highlights_engine.build_highlights(events, limit=12)
@@ -277,3 +280,18 @@ class MatchPipeline:
         result = self.analyze_full()
         insights = [Insight(**g) for g in result["goals"]] + [Insight(**p) for p in result["patterns"]]
         return self.repository.save_many(self.meta.match_id, insights)
+
+    def heatmap(self, team_id: str | None = None, bins_x: int = 12, bins_y: int = 8, kind: str | None = None) -> dict:
+        from app.engine import viz
+
+        return viz.heatmap(self._analysis_events, bins_x=bins_x, bins_y=bins_y, team_id=team_id, kind=kind)
+
+    def pass_network(self, team_id: str | None = None) -> dict:
+        from app.engine import viz
+
+        return viz.pass_network(self._analysis_events, team_id=team_id)
+
+    def expected_threat(self) -> dict:
+        from app.engine import viz
+
+        return viz.expected_threat(self._analysis_events)

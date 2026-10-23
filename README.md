@@ -8,7 +8,7 @@ Built for *Inside the Game: Developer Hackathon* (Microsoft × Premier League).
 ![CI](https://github.com/Siya-11-dev/InsideLens/actions/workflows/ci.yml/badge.svg)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-async-009688)
-![Tests](https://img.shields.io/badge/tests-74%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-78%20passing-brightgreen)
 ![Azure-ready](https://img.shields.io/badge/Azure-ready-0078D4)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
@@ -173,6 +173,10 @@ feed and evidence-backed insight cards.
 | GET | `/api/personas` | Available personas |
 | GET | `/api/dataset/export?seed=…&format=jsonl\|csv\|parquet\|delta&upload=false` | Expanded analytics dataset for ML/BI; `upload=true` pushes to Fabric OneLake |
 | GET | `/api/store/stats` | Active storage backend + persisted insight count |
+| GET | `/api/agent?question=...` | Conversational match analyst (tool-grounded, multilingual) |
+| GET | `/api/heatmap` | Spatial event heatmap (team/kind filterable) |
+| GET | `/api/pass-network` | Pass network nodes/edges |
+| GET | `/api/xt` | Expected threat (xT) by team + top events |
 | WS | `/ws/live?seed=…&speed=…&persona=…&source=synthetic\|eventhub&home=…&away=…` | Real-time stream: `match_init`, `tick`, `insight`, `end` |
 
 `home`/`away` are Premier League club ids (e.g. `MUN`, `MCI`, `ARS`, `LIV`); see `/api/teams`.
